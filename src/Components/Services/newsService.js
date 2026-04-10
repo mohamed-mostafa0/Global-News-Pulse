@@ -6,18 +6,24 @@ import { analyzeSentiment } from "../Utils/sentiment";
 const NEWS_API_KEY = "0a9069f5ff1f4805888d3ec74d79118f";
 
 export const fetchArticles = async () => {
+  // Use Vercel Serverless Function proxy in production to bypass NewsAPI restriction
+  const isLocalDev = import.meta.env.DEV;
+  const baseUrl = isLocalDev ? "https://newsapi.org/v2/everything" : "/api/news";
+  
+  const params = {
+    q: "e",
+    language: "en",
+    sortBy: "publishedAt",
+    pageSize: 20,
+    page: 1,
+  };
 
- 
-    const res = await axios.get("https://newsapi.org/v2/everything", {
-      params: {
-        q: "e",
-        language: "en",
-        sortBy: "publishedAt",
-        pageSize: 20,
-        page: 1,
-        apiKey: NEWS_API_KEY,
-      },
-    });
+  // Only pass API key directly if we are developing locally without the Vercel proxy
+  if (isLocalDev) {
+    params.apiKey = NEWS_API_KEY;
+  }
+
+  const res = await axios.get(baseUrl, { params });
 
     const numOfArticles = res.data.totalResults;
 

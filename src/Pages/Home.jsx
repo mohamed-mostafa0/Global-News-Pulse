@@ -63,16 +63,15 @@ const getArticles = async ()=>{
             let count = 0;
             let totalScore = 0;
 
-            const res = await axios.get(
-              "https://newsapi.org/v2/top-headlines/sources",
-              {
-                params: {
-                  country,
-                  pageSize: 20,
-                  apiKey: "0a9069f5ff1f4805888d3ec74d79118f",
-                },
-              }
-            );
+            const isLocalDev = import.meta.env.DEV;
+            const baseUrl = isLocalDev ? "https://newsapi.org/v2/top-headlines/sources" : "/api/sources";
+            const params = {
+              country,
+              pageSize: 20,
+            };
+            if (isLocalDev) params.apiKey = "0a9069f5ff1f4805888d3ec74d79118f";
+
+            const res = await axios.get(baseUrl, { params });
 
             res.data.sources.forEach((article) => {
               const text = `${article.title || ""} ${
