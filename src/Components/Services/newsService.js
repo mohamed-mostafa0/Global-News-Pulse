@@ -5,8 +5,7 @@ import { analyzeSentiment } from "../Utils/sentiment";
 
 const NEWS_API_KEY = "0a9069f5ff1f4805888d3ec74d79118f";
 
-export const fetchArticles = async () => {
-  // Use Vercel Serverless Function proxy in production to bypass NewsAPI restriction
+export const fetchArticles = async (page = 1, pageSize = 20) => {
   const isLocalDev = import.meta.env.DEV;
   const baseUrl = isLocalDev ? "https://newsapi.org/v2/everything" : "/api/news";
   
@@ -14,11 +13,10 @@ export const fetchArticles = async () => {
     q: "e",
     language: "en",
     sortBy: "publishedAt",
-    pageSize: 20,
-    page: 1,
+    pageSize,
+    page,
   };
 
-  // Only pass API key directly if we are developing locally without the Vercel proxy
   if (isLocalDev) {
     params.apiKey = NEWS_API_KEY;
   }
