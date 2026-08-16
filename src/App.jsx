@@ -11,7 +11,9 @@ export default function App() {
     {path:'' , element:<Layout/>  , children:[
       {path:'' , element:<Home/>}
     ]}
-  ])
+  ], {
+    basename: "/"
+  })
   return <>
   {showSplash && <ScreenLoader onComplete={() => setShowSplash(false)} />}
   <RouterProvider router={router}/>
